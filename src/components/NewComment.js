@@ -1,14 +1,23 @@
 import { useState } from "react";
+import { postComments } from "../services/httpServices";
 import "../App.css";
-const NewComment = ({ onPost }) => {
+import { useNavigate } from "react-router-dom";
+const NewComment = () => {
   const [comment, setComment] = useState({ name: "", email: "", body: "" });
-
+  const history = useNavigate();
   const changeHandler = (e) => {
     setComment({ ...comment, [e.target.id]: e.target.value });
   };
 
+  const postHandler = (e) => {
+    e.preventDefault();
+    postComments(comment)
+      .then(() => history("/"))
+      .catch();
+  };
+
   return (
-    <form className="box newComment" onSubmit={(e) => onPost(e, comment)}>
+    <form className="box newComment" onSubmit={postHandler}>
       <div>
         <label htmlFor="name">name:</label>
         <input
